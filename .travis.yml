@@ -44,10 +44,16 @@ matrix:
     env: INSTALL=gcc
     compiler: gcc-6
     osx_image: xcode8
+  - os: linux
+    env: TOOLKIT=true
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" == osx -a "$INSTALL" ] ; then brew install $INSTALL || true ; fi
 
-script:
-  - make
-  - make test
+script: |
+  if [[ $TOOLKIT == true ]]; then
+    bash <(curl -s https://runtimeverification.com/toolkit/docker/bash) nightly-2018-08-31
+  else 
+    make
+    make test
+  fi
